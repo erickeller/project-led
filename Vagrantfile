@@ -13,6 +13,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 #  etcdsvr.vm.network "private_network", ip: "192.168.1.8"
   etcdsvr.vm.box = "fgrehm/trusty64-lxc"
   etcdsvr.vm.provision :shell, path: "provision.sh"
+  etcdsvr.vm.provision :shell, path: "etcdsvr.sh"
   etcdsvr.vm.provider :lxc do |lxc|
     lxc.container_name = "etcdsvr"
     lxc.customize "network.type", "veth"
