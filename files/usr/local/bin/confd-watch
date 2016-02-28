@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -eo pipefail
+
+export ETCD_PORT=${ETCD_PORT:-2379}
+export HOST_IP=${HOST_IP:-10.0.3.7}
+export ETCD=http://$HOST_IP:$ETCD_PORT
+
+echo "[hosts] booting container. ETCD: $ETCD."
+
+# Try to make initial configuration every 5 seconds until successful
+until confd -onetime -node $ETCD -config-file /etc/confd/conf.d/hosts.toml; do
+    echo "[hosts] waiting for confd to create initial hosts configuration."
+    sleep 5
+done
+
+# Put a continual polling `confd` process into the background to watch
+# for changes every 10 seconds
+confd -interval 10 -node $ETCD -config-file /etc/confd/conf.d/hosts.toml &
+echo "[hosts] confd is now monitoring etcd for changes..."
+

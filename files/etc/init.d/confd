@@ -1,0 +1,66 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:        confd
+# Required-Start:  $network $remote_fs $syslog
+# Required-Stop:   $network $remote_fs $syslog
+# Default-Start:   2 3 4 5
+# Default-Stop:    1
+# Short-Description: Start confd daemon
+### END INIT INFO
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+. /lib/lsb/init-functions
+
+prog="confd"
+prog_bin="/usr/local/bin/$prog"
+pidfile=/var/run/$prog.pid
+desc="confd lightweight configuration management tool daemon"
+
+if ! [ -f $prog_bin ]; then
+  echo "$prog binary not found."
+  exit 5
+fi
+
+if [ -r /etc/default/$prog ]; then
+  . /etc/default/$prog
+fi
+
+start() {
+  log_daemon_msg "Starting confd server" "$prog"
+  start-stop-daemon --start --quiet --oknodo  --background --pidfile $pidfile --make-pidfile --exec $prog_bin -- $CONFD_OPTS
+  status=$?
+  log_end_msg $status
+}
+
+stop() {
+  log_begin_msg "Stopping confd server"
+  start-stop-daemon --stop --pidfile "$pidfile"
+  status=$?
+
+  if [ -f $pidfile ]; then
+    rm $pidfile
+  fi
+
+  log_end_msg $status
+}
+
+restart() {
+    stop
+    start
+}
+
+status() {
+  status_of_proc -p "$pidfile" "$prog_bin" confd
+}
+
+case "$1" in
+  start)   start;;
+  stop)    stop;;
+  restart) restart;;
+  status)  status;;
+  *)       echo "Usage: $0 {start|stop|restart|status}"
+           RETVAL=2;;
+esac
+exit $RETVAL
