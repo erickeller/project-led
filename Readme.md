@@ -33,6 +33,22 @@ The etcdsvr stores all required keys for the master and minions configuration.
 
 Basically the presenter (master) update his ip address and all minions /etc/hosts configuration are automatically updated through confd.
 
+### Getting started
+
+This repository comes with a vagrant with lxc provisioner playground. It automatically create:
+
+ * etcdsrv: starting up an etcd server on 10.0.3.7
+ * master: automatically adds it's ip 10.0.3.8 to etcd store.
+ * minion: automatically configures /etc/hosts when etcd master_ip value changes
+
+try it out:
+
+```
+vagrant up --provider lxc --provision
+```
+
+More details to find in the following sections
+
 ### etcdsvr
 
 ```
