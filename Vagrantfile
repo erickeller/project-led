@@ -42,6 +42,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 #  minion.vm.box = "fgrehm/wheezy64-lxc"
   minion.vm.box = "fgrehm/trusty64-lxc"
   minion.vm.provision :shell, path: "provision.sh"
+  minion.vm.provision :shell, path: "minion.sh"
   minion.vm.provider :lxc do |lxc|
     lxc.container_name = "minion"
     lxc.customize "network.type", "veth"
