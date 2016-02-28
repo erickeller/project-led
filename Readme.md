@@ -20,8 +20,18 @@ git ask
 ```
 The RED state is setup by the git workshop trainer (also called master)
 
+## Hardware
+
+The hardware configuration is described in the following repository
+
+https://github.com/jogi-k/Teensy-RGB-LED
+
 ## Technology stack: etcd + confd + saltstack
 
+Currently we do not intend to distribute etcd as a cluster, but this could be extended in the future.
+The etcdsvr stores all required keys for the master and minions configuration.
+
+Basically the presenter (master) update his ip address and all minions /etc/hosts configuration are automatically updated through confd.
 
 ### etcdsvr
 
@@ -38,12 +48,28 @@ ETCDSVR_IP=$(ip addr show eth0 | grep -Po 'inet \K[\d.]+') \
 ### master
 
 ```
-etcdctl --endpoint http://10.0.3.144:2379 set master_ip $(ip addr show eth0 | grep -Po 'inet \K[\d.]+')
+ETCDSVR=10.0.3.144
+etcdctl --endpoint http://${ETCDSVR}:2379 set master_ip $(ip addr show eth0 | grep -Po 'inet \K[\d.]+')
 ```
+
+or with curl
+
+```
+ETCDSVR=10.0.3.144
+curl -L http://${ETCDSVR}:2379/v2/keys/master_ip -XPUT -d value="$(ip addr show eth0 | grep -Po 'inet \K[\d.]+')"
+```
+
 
 ### minion
 
 ```
-etcdctl --endpoint http://10.0.3.144:2379 get master_ip
+ETCDSVR=10.0.3.144
+etcdctl --endpoint http://${ETCDSVR}:2379 get master_ip
 ```
 
+or with curl
+
+```
+ETCDSVR=10.0.3.144
+curl -L http://${ETCDSVR}:2379/v2/keys/master_ip
+```
