@@ -19,3 +19,8 @@ cp -f /vagrant/files/etc/default/confd /etc/default/confd
 cp -f /vagrant/files/usr/local/bin/confd-watch /usr/local/bin/confd-watch
 chmod +x /usr/local/bin/confd-watch
 
+# install saltstack
+apt-get install salt-minion -y
+# configure salt-minion pointing to the master
+sudo sed -i 's/#master: salt/master: master/' /etc/salt/minion
+service salt-minion restart
