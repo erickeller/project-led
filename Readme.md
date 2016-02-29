@@ -29,7 +29,7 @@ https://github.com/jogi-k/Teensy-RGB-LED
 ## Technology stack: etcd + confd + saltstack
 
 Currently we do not intend to distribute etcd as a cluster, but this could be extended in the future.
-The etcdsvr stores all required keys for the master and minions configuration.
+The etcdsrv stores all required keys for the master and minions configuration.
 
 Basically the presenter (master) update his ip address and all minions /etc/hosts configuration are automatically updated through confd.
 
