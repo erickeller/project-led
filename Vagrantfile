@@ -12,6 +12,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define "etcdserver" do |etcdserver|
 #  etcdserver.vm.network "private_network", ip: "192.168.1.8"
   etcdserver.vm.box = "fgrehm/trusty64-lxc"
+  etcdserver.vm.hostname = "etcdserver"
   etcdserver.vm.provision :shell, path: "provision.sh"
   etcdserver.vm.provision :shell, path: "etcdserver.sh"
   etcdserver.vm.provider :lxc do |lxc|
@@ -24,6 +25,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define "master" do |master|
 #  master.vm.network "private_network", ip: "192.168.1.8"
   master.vm.box = "fgrehm/trusty64-lxc"
+  master.vm.hostname = "master"
   master.vm.provision :shell, path: "provision.sh"
   master.vm.provision :shell, path: "saltstack.sh"
   master.vm.provision :shell, path: "master.sh"
@@ -41,8 +43,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
   config.vm.define "minion" do |minion|
 #  minion.vm.network "private_network", ip: "192.168.1.9"
-#  minion.vm.box = "fgrehm/wheezy64-lxc"
   minion.vm.box = "fgrehm/trusty64-lxc"
+  minion.vm.hostname = "minion"
   minion.vm.provision :shell, path: "provision.sh"
   minion.vm.provision :shell, path: "saltstack.sh"
   minion.vm.provision :shell, path: "minion.sh"
