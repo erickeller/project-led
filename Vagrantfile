@@ -9,13 +9,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # options are documented and commented below. For a complete reference,
   # please see the online documentation at vagrantup.com.
   
-  config.vm.define "etcdsvr" do |etcdsvr|
-#  etcdsvr.vm.network "private_network", ip: "192.168.1.8"
-  etcdsvr.vm.box = "fgrehm/trusty64-lxc"
-  etcdsvr.vm.provision :shell, path: "provision.sh"
-  etcdsvr.vm.provision :shell, path: "etcdsvr.sh"
-  etcdsvr.vm.provider :lxc do |lxc|
-    lxc.container_name = "etcdsvr"
+  config.vm.define "etcdserver" do |etcdserver|
+#  etcdserver.vm.network "private_network", ip: "192.168.1.8"
+  etcdserver.vm.box = "fgrehm/trusty64-lxc"
+  etcdserver.vm.provision :shell, path: "provision.sh"
+  etcdserver.vm.provision :shell, path: "etcdserver.sh"
+  etcdserver.vm.provider :lxc do |lxc|
+    lxc.container_name = "etcdserver"
     lxc.customize "network.type", "veth"
     lxc.customize "network.link", "lxcbr0"
     lxc.customize "network.ipv4", "10.0.3.7/24"
