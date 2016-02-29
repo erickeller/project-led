@@ -25,6 +25,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 #  master.vm.network "private_network", ip: "192.168.1.8"
   master.vm.box = "fgrehm/trusty64-lxc"
   master.vm.provision :shell, path: "provision.sh"
+  master.vm.provision :shell, path: "master.sh"
   master.vm.provider :lxc do |lxc|
     lxc.container_name = "master"
     lxc.customize "network.type", "veth"
