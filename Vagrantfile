@@ -54,10 +54,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     lxc.customize "network.link", "lxcbr0"
     lxc.customize "network.ipv4", "10.0.3.9/24"
   end
-  #minion.vm.provision "ansible" do |ansible|
-    # ansible.sudo = true
-    #ansible.playbook = "ansible/minion.yml"
-    # ansible.verbose = 'vvv'
-  #end
+  end
+  config.vm.define "minion2" do |minion2|
+  minion2.vm.box = "fgrehm/trusty64-lxc"
+  minion2.vm.hostname = "minion2"
+  minion2.vm.provision :shell, path: "provision.sh"
+  minion2.vm.provision :shell, path: "saltstack.sh"
+  minion2.vm.provision :shell, path: "minion.sh"
+  minion2.vm.provider :lxc do |lxc|
+    lxc.container_name = "minion2"
+    lxc.customize "network.type", "veth"
+    lxc.customize "network.link", "lxcbr0"
+    lxc.customize "network.ipv4", "10.0.3.10/24"
+  end
   end
 end
