@@ -27,6 +27,8 @@ if [ -r /etc/default/$prog ]; then
   . /etc/default/$prog
 fi
 
+export HOSTNAME=`hostname`
+
 start() {
   log_daemon_msg "Starting confd server" "$prog"
   start-stop-daemon --start --quiet --oknodo  --background --pidfile $pidfile --make-pidfile --exec $prog_bin -- $CONFD_OPTS
