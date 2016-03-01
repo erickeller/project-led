@@ -23,4 +23,7 @@ chmod +x /usr/local/bin/confd-watch
 apt-get install salt-minion -y
 # configure salt-minion pointing to the master
 sudo sed -i 's/#master: salt/master: master/' /etc/salt/minion
+# copy the master public key
+cp -f /vagrant/files/etc/salt/pki/master/master.pub /etc/salt/pki/minion/minion_master.pub
+chmod 644 /etc/salt/pki/minion/minion_master.pub
 service salt-minion restart
