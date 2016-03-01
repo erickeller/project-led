@@ -1,5 +1,5 @@
 127.0.0.1   localhost
-127.0.1.1   vagrant-base-trusty-amd64
+127.0.1.1   {{ getenv "HOSTNAME" }}
 {{ getv "/master_ip" }} master
 
 # The following lines are desirable for IPv6 capable hosts
