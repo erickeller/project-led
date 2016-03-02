@@ -20,6 +20,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     lxc.customize "network.type", "veth"
     lxc.customize "network.link", "lxcbr0"
     lxc.customize "network.ipv4", "10.0.3.7/24"
+    lxc.customize "aa_profile", "unconfined"
+    lxc.customize "aa_allow_incomplete", "1"
   end
   end
   config.vm.define "master" do |master|
@@ -34,6 +36,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     lxc.customize "network.type", "veth"
     lxc.customize "network.link", "lxcbr0"
     lxc.customize "network.ipv4", "10.0.3.8/24"
+    lxc.customize "aa_profile", "unconfined"
+    lxc.customize "aa_allow_incomplete", "1"
   end
   #master.vm.provision "ansible" do |ansible|
     # ansible.sudo = true
@@ -53,6 +57,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     lxc.customize "network.type", "veth"
     lxc.customize "network.link", "lxcbr0"
     lxc.customize "network.ipv4", "10.0.3.9/24"
+    lxc.customize "aa_profile", "unconfined"
+    lxc.customize "aa_allow_incomplete", "1"
   end
   end
   config.vm.define "minion2" do |minion2|
@@ -66,6 +72,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     lxc.customize "network.type", "veth"
     lxc.customize "network.link", "lxcbr0"
     lxc.customize "network.ipv4", "10.0.3.10/24"
+    lxc.customize "aa_profile", "unconfined"
+    lxc.customize "aa_allow_incomplete", "1"
   end
   end
 end
