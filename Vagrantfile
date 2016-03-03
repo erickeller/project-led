@@ -8,72 +8,80 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # All Vagrant configuration is done here. The most common configuration
   # options are documented and commented below. For a complete reference,
   # please see the online documentation at vagrantup.com.
-  
+
+  # default vagrant box for virtualbox provider
+  config.vm.box = "ubuntu/trusty64"
+
   config.vm.define "etcdserver" do |etcdserver|
-#  etcdserver.vm.network "private_network", ip: "192.168.1.8"
-  etcdserver.vm.box = "fgrehm/trusty64-lxc"
   etcdserver.vm.hostname = "etcdserver"
   etcdserver.vm.provision :shell, path: "provision.sh"
   etcdserver.vm.provision :shell, path: "etcdserver.sh"
-  etcdserver.vm.provider :lxc do |lxc|
-    lxc.container_name = "etcdserver"
-    lxc.customize "network.type", "veth"
-    lxc.customize "network.link", "lxcbr0"
-    lxc.customize "network.ipv4", "10.0.3.7/24"
-    lxc.customize "aa_profile", "unconfined"
-    lxc.customize "aa_allow_incomplete", "1"
+  etcdserver.vm.network "private_network", ip: "192.168.1.7"
+  config.vm.provider "lxc" do |v, override|
+    override.vm.box = "fgrehm/trusty64-lxc"
+    override.vm.provider :lxc do |lxc|
+      lxc.container_name = "etcdserver"
+      lxc.customize "network.type", "veth"
+      lxc.customize "network.link", "lxcbr0"
+      lxc.customize "network.ipv4", "10.0.3.7/24"
+      lxc.customize "aa_profile", "unconfined"
+      lxc.customize "aa_allow_incomplete", "1"
+    end
   end
   end
+
   config.vm.define "master" do |master|
-#  master.vm.network "private_network", ip: "192.168.1.8"
-  master.vm.box = "fgrehm/trusty64-lxc"
   master.vm.hostname = "master"
   master.vm.provision :shell, path: "provision.sh"
   master.vm.provision :shell, path: "saltstack.sh"
   master.vm.provision :shell, path: "master.sh"
-  master.vm.provider :lxc do |lxc|
-    lxc.container_name = "master"
-    lxc.customize "network.type", "veth"
-    lxc.customize "network.link", "lxcbr0"
-    lxc.customize "network.ipv4", "10.0.3.8/24"
-    lxc.customize "aa_profile", "unconfined"
-    lxc.customize "aa_allow_incomplete", "1"
+  master.vm.network "private_network", ip: "192.168.1.8"
+  config.vm.provider "lxc" do |v, override|
+    override.vm.box = "fgrehm/trusty64-lxc"
+    override.vm.provider :lxc do |lxc|
+      lxc.container_name = "master"
+      lxc.customize "network.type", "veth"
+      lxc.customize "network.link", "lxcbr0"
+      lxc.customize "network.ipv4", "10.0.3.8/24"
+      lxc.customize "aa_profile", "unconfined"
+      lxc.customize "aa_allow_incomplete", "1"
+    end
   end
-  #master.vm.provision "ansible" do |ansible|
-    # ansible.sudo = true
-    #ansible.playbook = "ansible/master.yml"
-    # ansible.verbose = 'vvv'
-  #end
   end
   config.vm.define "minion" do |minion|
-#  minion.vm.network "private_network", ip: "192.168.1.9"
-  minion.vm.box = "fgrehm/trusty64-lxc"
   minion.vm.hostname = "minion"
   minion.vm.provision :shell, path: "provision.sh"
   minion.vm.provision :shell, path: "saltstack.sh"
   minion.vm.provision :shell, path: "minion.sh"
-  minion.vm.provider :lxc do |lxc|
-    lxc.container_name = "minion"
-    lxc.customize "network.type", "veth"
-    lxc.customize "network.link", "lxcbr0"
-    lxc.customize "network.ipv4", "10.0.3.9/24"
-    lxc.customize "aa_profile", "unconfined"
-    lxc.customize "aa_allow_incomplete", "1"
+  minion.vm.network "private_network", ip: "192.168.1.9"
+  config.vm.provider "lxc" do |v, override|
+    override.vm.box = "fgrehm/trusty64-lxc"
+    override.vm.provider :lxc do |lxc|
+      lxc.container_name = "minion"
+      lxc.customize "network.type", "veth"
+      lxc.customize "network.link", "lxcbr0"
+      lxc.customize "network.ipv4", "10.0.3.9/24"
+      lxc.customize "aa_profile", "unconfined"
+      lxc.customize "aa_allow_incomplete", "1"
+    end
   end
   end
   config.vm.define "minion2" do |minion2|
-  minion2.vm.box = "fgrehm/trusty64-lxc"
   minion2.vm.hostname = "minion2"
   minion2.vm.provision :shell, path: "provision.sh"
   minion2.vm.provision :shell, path: "saltstack.sh"
   minion2.vm.provision :shell, path: "minion.sh"
-  minion2.vm.provider :lxc do |lxc|
-    lxc.container_name = "minion2"
-    lxc.customize "network.type", "veth"
-    lxc.customize "network.link", "lxcbr0"
-    lxc.customize "network.ipv4", "10.0.3.10/24"
-    lxc.customize "aa_profile", "unconfined"
-    lxc.customize "aa_allow_incomplete", "1"
+  minion2.vm.network "private_network", ip: "192.168.1.10"
+  config.vm.provider "lxc" do |v, override|
+    override.vm.box = "fgrehm/trusty64-lxc"
+    override.vm.provider :lxc do |lxc|
+      lxc.container_name = "minion2"
+      lxc.customize "network.type", "veth"
+      lxc.customize "network.link", "lxcbr0"
+      lxc.customize "network.ipv4", "10.0.3.10/24"
+      lxc.customize "aa_profile", "unconfined"
+      lxc.customize "aa_allow_incomplete", "1"
+    end
   end
   end
 end
