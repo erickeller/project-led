@@ -9,15 +9,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # options are documented and commented below. For a complete reference,
   # please see the online documentation at vagrantup.com.
 
-  # default vagrant box for virtualbox provider
-  config.vm.box = "ubuntu/trusty64"
-
   config.vm.define "etcdserver" do |etcdserver|
   etcdserver.vm.hostname = "etcdserver"
   etcdserver.vm.provision :shell, path: "provision.sh"
   etcdserver.vm.provision :shell, path: "etcdserver.sh"
-  etcdserver.vm.network "private_network", ip: "192.168.1.7"
-  config.vm.provider "lxc" do |v, override|
+  etcdserver.vm.provider "virtualbox" do |v, vb|
+    vb.vm.box = "ubuntu/trusty64"
+    vb.vm.network "private_network", ip: "192.168.10.7"
+  end
+  etcdserver.vm.provider "lxc" do |v, override|
     override.vm.box = "fgrehm/trusty64-lxc"
     override.vm.provider :lxc do |lxc|
       lxc.container_name = "etcdserver"
@@ -35,8 +35,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   master.vm.provision :shell, path: "provision.sh"
   master.vm.provision :shell, path: "saltstack.sh"
   master.vm.provision :shell, path: "master.sh"
-  master.vm.network "private_network", ip: "192.168.1.8"
-  config.vm.provider "lxc" do |v, override|
+  master.vm.provider "virtualbox" do |v, vb|
+    vb.vm.box = "ubuntu/trusty64"
+    vb.vm.network "private_network", ip: "192.168.10.8"
+  end
+  master.vm.provider "lxc" do |v, override|
     override.vm.box = "fgrehm/trusty64-lxc"
     override.vm.provider :lxc do |lxc|
       lxc.container_name = "master"
@@ -53,8 +56,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   minion.vm.provision :shell, path: "provision.sh"
   minion.vm.provision :shell, path: "saltstack.sh"
   minion.vm.provision :shell, path: "minion.sh"
-  minion.vm.network "private_network", ip: "192.168.1.9"
-  config.vm.provider "lxc" do |v, override|
+  minion.vm.provider "virtualbox" do |v, vb|
+    vb.vm.box = "ubuntu/trusty64"
+    vb.vm.network "private_network", ip: "192.168.10.9"
+  end
+  minion.vm.provider "lxc" do |v, override|
     override.vm.box = "fgrehm/trusty64-lxc"
     override.vm.provider :lxc do |lxc|
       lxc.container_name = "minion"
@@ -71,8 +77,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   minion2.vm.provision :shell, path: "provision.sh"
   minion2.vm.provision :shell, path: "saltstack.sh"
   minion2.vm.provision :shell, path: "minion.sh"
-  minion2.vm.network "private_network", ip: "192.168.1.10"
-  config.vm.provider "lxc" do |v, override|
+  minion2.vm.provider "virtualbox" do |v, vb|
+    vb.vm.box = "ubuntu/trusty64"
+    vb.vm.network "private_network", ip: "192.168.10.10"
+  end
+  minion2.vm.provider "lxc" do |v, override|
     override.vm.box = "fgrehm/trusty64-lxc"
     override.vm.provider :lxc do |lxc|
       lxc.container_name = "minion2"
