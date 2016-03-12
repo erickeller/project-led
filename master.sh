@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+ETCDSERVER_IP=$1
+MASTER_IP=$2
 # setup master ip
 apt-get install salt-master -y
 sudo sed -i 's/#interface: 0.0.0.0/interface: 0.0.0.0/' /etc/salt/master
@@ -11,4 +13,4 @@ chmod 400 /etc/salt/pki/master/master.pem
 chmod 644 /etc/salt/pki/master/master.pub
 service salt-master restart
 # set salt-master ip address in etcd
-etcdctl --endpoint http://10.0.3.7:2379 set master_ip 10.0.3.8
+etcdctl --endpoint http://${ETCDSERVER_IP}:2379 set master_ip ${MASTER_IP}

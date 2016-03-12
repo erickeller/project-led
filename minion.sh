@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+ETCDSERVER_IP=$1
 echo "Installing confd and setting it up..."
 CONFD_VERSION=0.12.0-alpha3
 CONFD_DIR=/opt/confd-${CONFD_VERSION}
@@ -12,11 +13,11 @@ cp -f /vagrant/files/etc/confd/templates/hosts.tmpl /etc/confd/templates/hosts.t
 # add confd service
 cp -f /vagrant/files/etc/init.d/confd /etc/init.d/confd
 chmod +x /etc/init.d/confd
-cp -f /vagrant/files/etc/default/confd /etc/default/confd
+cat /vagrant/files/etc/default/confd | sed -e "s/##ETCDSERVER_IP##/${ETCDSERVER_IP}/g" > /etc/default/confd
 /usr/lib/insserv/insserv -d /etc/init.d/confd
 /etc/init.d/confd start
 # add confd-watch for manual use
-cp -f /vagrant/files/usr/local/bin/confd-watch /usr/local/bin/confd-watch
+cat /vagrant/files/usr/local/bin/confd-watch | sed -e "s/##ETCDSERVER_IP##/${ETCDSERVER_IP}/g" > /usr/local/bin/confd-watch
 chmod +x /usr/local/bin/confd-watch
 
 # install saltstack

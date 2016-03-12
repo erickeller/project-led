@@ -1,5 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
+require 'yaml'
+current_dir    = File.dirname(File.expand_path(__FILE__))
+configs        = YAML.load_file("#{current_dir}/config.yaml")
 
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
@@ -12,18 +15,19 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define "etcdserver" do |etcdserver|
   etcdserver.vm.hostname = "etcdserver"
   etcdserver.vm.provision :shell, path: "provision.sh"
-  etcdserver.vm.provision :shell, path: "etcdserver.sh"
   etcdserver.vm.provider "virtualbox" do |v, vb|
     vb.vm.box = "ubuntu/trusty64"
-    vb.vm.network "private_network", ip: "192.168.10.7"
+    vb.vm.network "private_network", ip: configs['configs']['virtualbox']['etcdserver_ip']
+    vb.vm.provision :shell, path: "etcdserver.sh", args: configs['configs']['virtualbox']['etcdserver_ip']
   end
   etcdserver.vm.provider "lxc" do |v, override|
     override.vm.box = "fgrehm/trusty64-lxc"
+    override.vm.provision :shell, path: "etcdserver.sh", args: configs['configs']['lxc']['etcdserver_ip']
     override.vm.provider :lxc do |lxc|
       lxc.container_name = "etcdserver"
       lxc.customize "network.type", "veth"
       lxc.customize "network.link", "lxcbr0"
-      lxc.customize "network.ipv4", "10.0.3.7/24"
+      lxc.customize "network.ipv4", configs['configs']['lxc']['etcdserver_ip']
       lxc.customize "aa_profile", "unconfined"
       lxc.customize "aa_allow_incomplete", "1"
     end
@@ -32,62 +36,67 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "master" do |master|
   master.vm.hostname = "master"
+  master.vm.provider "virtualbox" do |v, vb|
   master.vm.provision :shell, path: "provision.sh"
   master.vm.provision :shell, path: "saltstack.sh"
-  master.vm.provision :shell, path: "master.sh"
-  master.vm.provider "virtualbox" do |v, vb|
     vb.vm.box = "ubuntu/trusty64"
-    vb.vm.network "private_network", ip: "192.168.10.8"
+    vb.vm.network "private_network", ip: configs['configs']['virtualbox']['master_ip']
+    vb.vm.provision :shell, path: "master.sh", args: [configs['configs']['virtualbox']['etcdserver_ip'], configs['configs']['virtualbox']['master_ip']]
   end
   master.vm.provider "lxc" do |v, override|
     override.vm.box = "fgrehm/trusty64-lxc"
+    override.vm.provision :shell, path: "master.sh", args: [configs['configs']['lxc']['etcdserver_ip'], configs['configs']['lxc']['master_ip']]
     override.vm.provider :lxc do |lxc|
       lxc.container_name = "master"
       lxc.customize "network.type", "veth"
       lxc.customize "network.link", "lxcbr0"
-      lxc.customize "network.ipv4", "10.0.3.8/24"
+      lxc.customize "network.ipv4", configs['configs']['lxc']['master_ip']
       lxc.customize "aa_profile", "unconfined"
       lxc.customize "aa_allow_incomplete", "1"
     end
   end
   end
+
   config.vm.define "minion" do |minion|
   minion.vm.hostname = "minion"
   minion.vm.provision :shell, path: "provision.sh"
   minion.vm.provision :shell, path: "saltstack.sh"
-  minion.vm.provision :shell, path: "minion.sh"
   minion.vm.provider "virtualbox" do |v, vb|
     vb.vm.box = "ubuntu/trusty64"
-    vb.vm.network "private_network", ip: "192.168.10.9"
+    vb.vm.network "private_network", ip: configs['configs']['virtualbox']['minion_ip']
+    vb.vm.provision :shell, path: "minion.sh", args: configs['configs']['virtualbox']['etcdserver_ip']
   end
   minion.vm.provider "lxc" do |v, override|
     override.vm.box = "fgrehm/trusty64-lxc"
+    override.vm.provision :shell, path: "minion.sh", args: configs['configs']['virtualbox']['etcdserver_ip']
     override.vm.provider :lxc do |lxc|
       lxc.container_name = "minion"
       lxc.customize "network.type", "veth"
       lxc.customize "network.link", "lxcbr0"
-      lxc.customize "network.ipv4", "10.0.3.9/24"
+      lxc.customize "network.ipv4", configs['configs']['lxc']['minion_ip']
       lxc.customize "aa_profile", "unconfined"
       lxc.customize "aa_allow_incomplete", "1"
     end
   end
   end
+
   config.vm.define "minion2" do |minion2|
   minion2.vm.hostname = "minion2"
   minion2.vm.provision :shell, path: "provision.sh"
   minion2.vm.provision :shell, path: "saltstack.sh"
-  minion2.vm.provision :shell, path: "minion.sh"
   minion2.vm.provider "virtualbox" do |v, vb|
     vb.vm.box = "ubuntu/trusty64"
-    vb.vm.network "private_network", ip: "192.168.10.10"
+    vb.vm.network "private_network", ip: configs['configs']['virtualbox']['minion2_ip']
+    vb.vm.provision :shell, path: "minion.sh", args: configs['configs']['virtualbox']['etcdserver_ip']
   end
   minion2.vm.provider "lxc" do |v, override|
     override.vm.box = "fgrehm/trusty64-lxc"
+    override.vm.provision :shell, path: "minion.sh", args: configs['configs']['virtualbox']['etcdserver_ip']
     override.vm.provider :lxc do |lxc|
       lxc.container_name = "minion2"
       lxc.customize "network.type", "veth"
       lxc.customize "network.link", "lxcbr0"
-      lxc.customize "network.ipv4", "10.0.3.10/24"
+      lxc.customize "network.ipv4", configs['configs']['lxc']['minion2_ip']
       lxc.customize "aa_profile", "unconfined"
       lxc.customize "aa_allow_incomplete", "1"
     end

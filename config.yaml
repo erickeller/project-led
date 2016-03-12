@@ -1,0 +1,12 @@
+---
+configs:
+    lxc:
+        etcdserver_ip: '10.0.3.7'
+        master_ip: '10.0.3.8'
+        minion_ip: '10.0.3.9'
+        minion2_ip: '10.0.3.10'
+    virtualbox:
+        etcdserver_ip: '192.168.3.7'
+        master_ip: '192.168.3.8'
+        minion_ip: '192.168.3.9'
+        minion2_ip: '192.168.3.10'
