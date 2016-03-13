@@ -1,0 +1,4 @@
+---
+confd_version: 0.12.0-alpha3
+confd_directory: /opt/confd-{{ confd_version }}
+

@@ -1,0 +1,9 @@
+---
+- name: create confd directory
+  file: path={{ confd_directory }} state=directory recurse=yes owner=root group=root mode=0755
+
+- name: install confd from github
+  get_url: url=https://github.com/kelseyhightower/confd/releases/download/v{{ confd_version }}/confd-{{ confd_version }}-linux-amd64 dest={{ confd_directory }}/confd-{{ confd_version }}-linux-amd64 owner=root group=root mode=0755
+
+- name: create links to /usr/local/bin
+  file: src={{ confd_directory }}/confd-{{ confd_version }}-linux-amd64 dest=/usr/local/bin/confd owner=root group=root state=link

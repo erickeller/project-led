@@ -1,0 +1,12 @@
+---
+- name: install salt-minion
+  apt: name=salt-minion state=present
+
+- name: configure salt-minion to auto accept minions
+  lineinfile: "regexp='^#master: salt$' line='master: master' dest=/etc/salt/minion"
+
+- name: copy insecure salt-master public key
+  copy: src=../../master/files/etc/salt/pki/master/master.pub dest=/etc/salt/pki/minion/master.pub owner=root group=root mode=0644
+
+- name: restart salt-minion service
+  service: name=salt-minion state=restarted

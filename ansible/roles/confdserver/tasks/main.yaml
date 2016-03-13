@@ -1,0 +1,24 @@
+---
+- name: install confd init script
+  copy: src=etc/init.d/confd dest=/etc/init.d/confd owner=root group=root mode=0755
+
+- name: configure default confd server parameters
+  template: src=etc/default/confd.j2 dest=/etc/default/confd owner=root group=root mode=0644
+
+- name: create confd configuration directories
+  file: path=/etc/confd/{{ item }} recurse=yes state=directory owner=root group=root mode=0755
+  with_items:
+    - conf.d
+    - templates
+
+- name: setup confd appropriate hostname template
+  copy: src={{ item }} dest=/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - etc/confd/templates/hosts.tmpl
+    - etc/confd/conf.d/hosts.toml
+
+- name: add confd-watch for debug
+  template: src=usr/local/bin/confd-watch.j2 dest=/usr/local/bin/confd-watch owner=root group=root mode=0755
+
+- name: enable and start confd service
+  service: name=confd enabled=yes state=started
