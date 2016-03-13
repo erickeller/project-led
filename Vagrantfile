@@ -14,15 +14,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "etcdserver" do |etcdserver|
   etcdserver.vm.hostname = "etcdserver"
-  etcdserver.vm.provision :shell, path: "shell/provision.sh"
   etcdserver.vm.provider "virtualbox" do |v, vb|
     vb.vm.box = "ubuntu/trusty64"
     vb.vm.network "private_network", ip: configs['configs']['virtualbox']['etcdserver_ip']
-    vb.vm.provision :shell, path: "shell/etcdserver.sh", args: configs['configs']['virtualbox']['etcdserver_ip']
+    vb.vm.provision "ansible" do |ansible|
+      ansible.playbook = "./ansible/etcdserver.yaml"
+      ansible.extra_vars = { etcdserver_ip: configs['configs']['virtualbox']['etcdserver_ip'] }
+    end
   end
   etcdserver.vm.provider "lxc" do |v, override|
     override.vm.box = "fgrehm/trusty64-lxc"
-    override.vm.provision :shell, path: "shell/etcdserver.sh", args: configs['configs']['lxc']['etcdserver_ip']
+    override.vm.provision "ansible" do |ansible|
+      ansible.playbook = "./ansible/etcdserver.yaml"
+      ansible.extra_vars = { etcdserver_ip: configs['configs']['lxc']['etcdserver_ip'] }
+    end
     override.vm.provider :lxc do |lxc|
       lxc.container_name = "etcdserver"
       lxc.customize "network.type", "veth"

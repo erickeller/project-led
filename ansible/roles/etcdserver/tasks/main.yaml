@@ -1,0 +1,9 @@
+---
+- name: install etcd init script
+  copy: src=etc/init.d/etcd dest=/etc/init.d/etcd owner=root group=root mode=0755
+
+- name: configure default etcd server parameters
+  template: src=etc/default/etcd.j2 dest=/etc/default/etcd owner=root group=root mode=0644
+
+- name: enable and start etcd service
+  service: name=etcd enabled=yes state=started

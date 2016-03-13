@@ -1,0 +1,12 @@
+---
+- name: install etcd from github
+  get_url: url=https://github.com/coreos/etcd/releases/download/{{ etcd_version }}/etcd-{{ etcd_version }}-linux-amd64.tar.gz dest=/tmp/etcd-{{ etcd_version }}-linux-amd64.tar.gz
+
+- name: extract to /opt/
+  command: tar xzf /tmp/etcd-{{ etcd_version }}-linux-amd64.tar.gz -C /opt/
+
+- name: create links to /usr/local/bin
+  file: src=/opt/etcd-{{ etcd_version }}-linux-amd64/{{ item }} dest=/usr/local/bin/{{ item }} owner=root group=root state=link
+  with_items:
+    - etcd
+    - etcdctl
