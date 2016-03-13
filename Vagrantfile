@@ -42,15 +42,19 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define "master" do |master|
   master.vm.hostname = "master"
   master.vm.provider "virtualbox" do |v, vb|
-  master.vm.provision :shell, path: "shell/provision.sh"
-  master.vm.provision :shell, path: "shell/saltstack.sh"
     vb.vm.box = "ubuntu/trusty64"
     vb.vm.network "private_network", ip: configs['configs']['virtualbox']['master_ip']
-    vb.vm.provision :shell, path: "shell/master.sh", args: [configs['configs']['virtualbox']['etcdserver_ip'], configs['configs']['virtualbox']['master_ip']]
+    vb.vm.provision "ansible" do |ansible|
+      ansible.playbook = "./ansible/master.yaml"
+      ansible.extra_vars = { etcdserver_ip: configs['configs']['virtualbox']['etcdserver_ip'], master_ip: configs['configs']['virtualbox']['master_ip'] }
+    end
   end
   master.vm.provider "lxc" do |v, override|
     override.vm.box = "fgrehm/trusty64-lxc"
-    override.vm.provision :shell, path: "shell/master.sh", args: [configs['configs']['lxc']['etcdserver_ip'], configs['configs']['lxc']['master_ip']]
+    override.vm.provision "ansible" do |ansible|
+      ansible.playbook = "./ansible/master.yaml"
+      ansible.extra_vars = { etcdserver_ip: configs['configs']['lxc']['etcdserver_ip'], master_ip: configs['configs']['lxc']['master_ip'] }
+    end
     override.vm.provider :lxc do |lxc|
       lxc.container_name = "master"
       lxc.customize "network.type", "veth"

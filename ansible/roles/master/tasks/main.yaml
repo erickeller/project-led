@@ -1,0 +1,21 @@
+---
+- name: install salt-master
+  apt: name=salt-master state=present
+
+#- name: configure salt-master listening interface
+#  lineinfile: regexp='^#interface: 0\.0\.0\.0$' line='interface: 0.0.0.0' dest=/etc/salt/master
+
+- name: configure salt-master to auto accept minions
+  lineinfile: "regexp='^#auto_accept: False$' line='auto_accept: True' dest=/etc/salt/master"
+
+- name: copy insecure salt-master key pair
+  copy: src=etc/salt/pki/master/{{ item.name }} dest=/etc/salt/pki/master/{{ item.name }} owner=root group=root mode={{ item.mode }}
+  with_items:
+    - { name: "master.pem", mode: "0400" }
+    - { name: "master.pub", mode: "0644" }
+
+- name: restart salt-master service
+  service: name=salt-master state=restarted
+
+- name: register salt-master ip to etcd
+  command: /usr/local/bin/etcdctl --endpoint http://{{ etcdserver_ip }}:2379 set master_ip {{ master_ip }}
