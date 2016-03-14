@@ -5,6 +5,12 @@
 - name: configure salt-minion to auto accept minions
   lineinfile: "regexp='^#master: salt$' line='master: master' dest=/etc/salt/minion"
 
+- name: create /etc/salt/pki/minion path
+  file: path=/etc/salt/pki/minion owner=root group=root mode=0755 recurse=yes state=directory
+
+- name: ensure /etc/salt/pki/minion directory is only accessible by root
+  file: path=/etc/salt/pki/minion owner=root group=root mode=0700 state=directory
+
 - name: copy insecure salt-master public key
   copy: src=../../master/files/etc/salt/pki/master/master.pub dest=/etc/salt/pki/minion/master.pub owner=root group=root mode=0644
 
