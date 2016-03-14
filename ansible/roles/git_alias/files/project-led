@@ -1,0 +1,20 @@
+#!/bin/sh
+
+COMMAND=$1
+
+case "$COMMAND" in
+  "done")
+    echo "Yeah !!!"
+    sudo sh -c 'echo g > /dev/ttyACM0'
+  ;;
+  "ask")
+    echo "What ?!"
+    sudo sh -c 'echo b > /dev/ttyACM0'
+  ;;
+  *)
+    echo "unknown command: ${COMMAND}"
+    sudo sh -c 'echo i > /dev/ttyACM0'
+    exit 1
+  ;;
+esac
+exit 0

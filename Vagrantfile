@@ -73,14 +73,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.vm.network "private_network", ip: configs['configs']['virtualbox']['minion_ip']
     vb.vm.provision "ansible" do |ansible|
       ansible.playbook = "./ansible/minion.yaml"
-      ansible.extra_vars = { etcdserver_ip: configs['configs']['virtualbox']['etcdserver_ip'] }
+      ansible.extra_vars = { etcdserver_ip: configs['configs']['virtualbox']['etcdserver_ip'], git_user: "vagrant" }
     end
   end
   minion.vm.provider "lxc" do |v, override|
     override.vm.box = "fgrehm/trusty64-lxc"
     override.vm.provision "ansible" do |ansible|
       ansible.playbook = "./ansible/minion.yaml"
-      ansible.extra_vars = { etcdserver_ip: configs['configs']['lxc']['etcdserver_ip'] }
+      ansible.extra_vars = { etcdserver_ip: configs['configs']['lxc']['etcdserver_ip'], git_user: "vagrant" }
     end
     override.vm.provider :lxc do |lxc|
       lxc.container_name = "minion"
@@ -100,14 +100,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.vm.network "private_network", ip: configs['configs']['virtualbox']['minion2_ip']
     vb.vm.provision "ansible" do |ansible|
       ansible.playbook = "./ansible/minion.yaml"
-      ansible.extra_vars = { etcdserver_ip: configs['configs']['virtualbox']['etcdserver_ip'] }
+      ansible.extra_vars = { etcdserver_ip: configs['configs']['virtualbox']['etcdserver_ip'], git_user: "vagrant" }
     end
   end
   minion2.vm.provider "lxc" do |v, override|
     override.vm.box = "fgrehm/trusty64-lxc"
     override.vm.provision "ansible" do |ansible|
       ansible.playbook = "./ansible/minion.yaml"
-      ansible.extra_vars = { etcdserver_ip: configs['configs']['lxc']['etcdserver_ip'] }
+      ansible.extra_vars = { etcdserver_ip: configs['configs']['lxc']['etcdserver_ip'], git_user: "vagrant" }
     end
     override.vm.provider :lxc do |lxc|
       lxc.container_name = "minion2"

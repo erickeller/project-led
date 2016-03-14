@@ -1,0 +1,9 @@
+---
+- name: copy project-led script to /usr/local/bin/
+  copy: src=project-led dest=/usr/local/bin/project-led owner=root group=root mode=0755
+
+- name: add appropirate alias to gitconfig
+  ini_file: dest=/home/{{ git_user }}/.gitconfig section=alias option={{ item }} value='!/usr/local/bin/project-led {{ item }}' owner={{ git_user }} group={{ git_user }} mode=0600 backup=yes
+  with_items:
+    - done
+    - ask

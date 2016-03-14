@@ -9,3 +9,4 @@
     - role: saltstack
     - role: minion
     - role: udev
+    - role: git_alias
