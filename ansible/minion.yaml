@@ -8,3 +8,4 @@
     - role: confdserver
     - role: saltstack
     - role: minion
+    - role: udev

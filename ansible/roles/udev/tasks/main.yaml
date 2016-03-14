@@ -1,0 +1,3 @@
+---
+- name: copy teensy udev rule
+  copy: src=49-teensy.rules dest=/etc/udev/rules.d/49-teensy.rules owner=root group=root mode=0644
