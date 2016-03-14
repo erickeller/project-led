@@ -1,9 +1,11 @@
 ---
 - name: add saltstack gpg key
-  apt_key: url=https://repo.saltstack.com/apt/ubuntu/{{ ansible_distribution_version }}/amd64/latest/SALTSTACK-GPG-KEY.pub state=present
+  apt_key: url=https://repo.saltstack.com/apt/ubuntu/latest/SALTSTACK-GPG-KEY.pub state=present
 
+# use hardcoded trusty and 14.04 keywords as explained in this post:
+# https://github.com/saltstack/salt/issues/28674
 - name: add saltstack repository
-  apt_repository: repo='deb http://repo.saltstack.com/apt/ubuntu/{{ ansible_distribution_version }}/amd64/latest {{ ansible_distribution_release }} main' state=present
+  apt_repository: repo='deb http://repo.saltstack.com/apt/ubuntu/14.04/amd64/latest trusty main' state=present
 
 - name: update repository
-  apt: update_cache=yes 
+  apt: update_cache=yes upgrade=dist
